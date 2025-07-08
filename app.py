@@ -149,11 +149,8 @@ if prompt := st.chat_input("Send a message..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # If this is the first message in a "New Chat", update the title
-    if get_current_chat_title() == "New Chat" and len(messages) == 1:
-        new_title = prompt[:30] + "..." if len(prompt) > 30 else prompt
-        set_current_chat_title(new_title)
-        st.rerun() # Rerun to update the title in the sidebar
+    # Check if this is the first message in a "New Chat" to update the title later
+    is_new_chat = get_current_chat_title() == "New Chat"
 
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
@@ -162,3 +159,9 @@ if prompt := st.chat_input("Send a message..."):
 
     # Add assistant response to chat history
     messages.append({"role": "assistant", "content": response_content})
+
+    # If this is the first message in a "New Chat", update the title
+    if is_new_chat:
+        new_title = prompt[:30] + "..." if len(prompt) > 30 else prompt
+        set_current_chat_title(new_title)
+        st.rerun() # Rerun to update the title in the sidebar
